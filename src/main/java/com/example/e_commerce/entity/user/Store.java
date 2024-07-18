@@ -28,4 +28,5 @@ public class Store {
 
     @Column(name="bank_account")
     private String bankAccount;
+
 }
