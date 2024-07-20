@@ -2,10 +2,13 @@ package com.example.e_commerce.service.productManagementService;
 
 import com.example.e_commerce.dto.ProductManagementDto.CategoryRequestDto;
 import com.example.e_commerce.entity.productManagementEntity.Category;
+import com.example.e_commerce.exceptions.ApiException;
 import com.example.e_commerce.repository.productManagementRepository.CategoryRepository;
 import com.example.e_commerce.validation.Validation;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +52,11 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Optional<Category> findByCode(String code) {
         return categoryRepository.findByCode(code);
+    }
+
+    @Override
+    public Category findDataById(Long id) {
+        return categoryRepository.findDataById(id)
+                .orElseThrow(() -> new ApiException("Category id not found", HttpStatus.NOT_FOUND));
     }
 }

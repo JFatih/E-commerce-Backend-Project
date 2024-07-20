@@ -25,6 +25,9 @@ public class SecurityConfig {
                     auth.requestMatchers("/auth/**").permitAll();
                     auth.requestMatchers("/roles/**").permitAll();
                     auth.requestMatchers("/login/**").permitAll();
+                    auth.requestMatchers(HttpMethod.GET,"/products/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,"/products/add/**").hasAuthority(RoleCode.store.name());
+                    auth.requestMatchers(HttpMethod.POST,"/products/adds/**").hasAuthority(RoleCode.store.name());
                     auth.requestMatchers(HttpMethod.GET,"/categories/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,"/categories/**").hasAuthority(RoleCode.admin.name());
                     auth.requestMatchers("/admin/**").hasAuthority(RoleCode.admin.name());
@@ -34,7 +37,6 @@ public class SecurityConfig {
                 }).formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .build();
-
     }
 
     @Bean

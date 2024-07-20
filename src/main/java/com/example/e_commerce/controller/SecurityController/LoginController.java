@@ -18,9 +18,9 @@ public class LoginController {
 
     private UserService userService;
 
-    @GetMapping
-    public String successLogIn(){
-        return "success login";
+    @PostMapping
+    public String successLogIn(@AuthenticationPrincipal UserDetails userDetails){
+        return "Authenticated user: " + userDetails.getUsername();
     }
 
 }

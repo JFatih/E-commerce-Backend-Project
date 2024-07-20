@@ -31,4 +31,16 @@ public class Validation {
 
         throw new ApiException(code + " is existing", HttpStatus.BAD_REQUEST);
     }
+
+    public static void limitValidation(Integer limit) {
+        if(limit < 1){
+            throw new ApiException("Limit: " + limit + " cannot be less than one", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public static void offSetValidation(Integer offset) {
+        if(offset < 0){
+            throw new ApiException("Offset: " + offset + " cannot be less than zero", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

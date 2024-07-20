@@ -1,6 +1,7 @@
 package com.example.e_commerce.entity.productManagementEntity;
 
 import com.example.e_commerce.entity.user.Store;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -39,12 +40,12 @@ public class Product {
     @NotNull
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name="store_id")
-    private Store storeId;
+    private Store store;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id")
-    private Category categoryId;
+    private Category category;
 
     @Min(0)
     private double rating;
@@ -53,6 +54,7 @@ public class Product {
     @Column(name="sell_count")
     private int sellCount;
 
+    @JsonBackReference
     @OneToMany(mappedBy="productId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images;
 }
