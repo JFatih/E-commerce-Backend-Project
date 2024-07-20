@@ -30,8 +30,7 @@ public class ProductController {
                                                @RequestParam(value = "limit", required = false) Integer limit,
                                                @RequestParam(value = "offset", required = false) Integer offset){
 
-            List<Product> paraResponse = productService.findByParameter(id,word,sort,limit,offset);
-            return ProductMapper.ProductToProductResponse(paraResponse);
+        return productService.findByParameter(id,word,sort,limit,offset);
     }
 
     //Store

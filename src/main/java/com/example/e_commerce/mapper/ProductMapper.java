@@ -47,6 +47,19 @@ public class ProductMapper {
         return response;
     }
 
+    public static ProductResponseWithCountDto ProductToProductResponse(List<Product>withoutFilter,List<Product>products){
+
+        List<ProductResponseDto> newList = new ArrayList<>();
+
+        for(Product pr : products){
+            newList.add(ProductToProductResponse(pr));
+        }
+        ProductResponseWithCountDto response = new ProductResponseWithCountDto();
+        response.setTotal(withoutFilter.size());
+        response.setProducts(newList);
+        return response;
+    }
+
     public static Product productRequestToProduct(ProductRequestDto p){
 
         Product newProduct = new Product();

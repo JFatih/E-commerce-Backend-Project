@@ -2,11 +2,13 @@ package com.example.e_commerce.service.productManagementService;
 
 import com.example.e_commerce.dto.ProductManagementDto.ImageRequestDto;
 import com.example.e_commerce.dto.ProductManagementDto.ProductRequestDto;
+import com.example.e_commerce.dto.ProductManagementDto.ProductResponseWithCountDto;
 import com.example.e_commerce.entity.productManagementEntity.Category;
 import com.example.e_commerce.entity.productManagementEntity.Image;
 import com.example.e_commerce.entity.productManagementEntity.Product;
 import com.example.e_commerce.entity.user.ApplicationUser;
 import com.example.e_commerce.exceptions.ApiException;
+import com.example.e_commerce.mapper.ProductMapper;
 import com.example.e_commerce.repository.productManagementRepository.ProductRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
@@ -99,7 +101,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> findByParameter(Long id, String word, String sort, Integer limit, Integer offset){
+    public ProductResponseWithCountDto findByParameter(Long id, String word, String sort, Integer limit, Integer offset){
 
         if(id != null){
             categoryService.findDataById(id);
@@ -140,15 +142,17 @@ public class ProductServiceImpl implements ProductService{
         Validation.limitValidation(limit);
         Validation.offSetValidation(limit);
 
+        List<Product> withoutLimitList = typedQuery.getResultList();
+
         if(limit != null && offset != null){
             typedQuery.setFirstResult(offset);
-            typedQuery.setMaxResults(limit+offset);
+            typedQuery.setMaxResults(limit);
         }
 
+        List<Product> withLimitList = typedQuery.getResultList();
 
 
-        return typedQuery.getResultList();
-
+        return ProductMapper.ProductToProductResponse(withoutLimitList,withLimitList);
     }
 }
 
