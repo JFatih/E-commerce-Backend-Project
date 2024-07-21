@@ -39,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Validation.emailAlreadyExist(registerUser.getEmail());
         }
 
-        if(registerUser.getRole_id().contains(3L) && registerUser.getStore() == null){
+        if(registerUser.getRole_id().contains(2L) && registerUser.getStore() == null){
             Validation.storeRegisterNullStoreData();
         }
 

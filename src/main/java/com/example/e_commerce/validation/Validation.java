@@ -43,4 +43,8 @@ public class Validation {
             throw new ApiException("Offset: " + offset + " cannot be less than zero", HttpStatus.BAD_REQUEST);
         }
     }
+
+    public static void titleIsExist(String title) {
+        throw new ApiException( title + " is exist.", HttpStatus.BAD_REQUEST);
+    }
 }
