@@ -1,7 +1,10 @@
 package com.example.e_commerce.validation;
 
+import com.example.e_commerce.entity.user.ApplicationUser;
 import com.example.e_commerce.exceptions.ApiException;
 import org.springframework.http.HttpStatus;
+
+import java.util.Optional;
 
 public class Validation {
 
@@ -46,5 +49,13 @@ public class Validation {
 
     public static void titleIsExist(String title) {
         throw new ApiException( title + " is exist.", HttpStatus.BAD_REQUEST);
+    }
+
+    public static void currentlyUserIsRegistered(Optional<ApplicationUser> user) {
+
+        if(user.isEmpty()){
+            throw new ApiException("The current user is not registered",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

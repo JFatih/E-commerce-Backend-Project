@@ -42,6 +42,9 @@ public class ApplicationUser implements UserDetails {
     @JoinColumn(name="store_id")
     private Store store;
 
+    @OneToMany(mappedBy = "applicationUser")
+    private List<CardDetails> cards;
+
     public void addAuthority(Role role){
         if(authorities == null){
             authorities = new HashSet<>();
