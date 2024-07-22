@@ -97,7 +97,7 @@ public class CustomerController {
     @GetMapping("/order")
     public List<OrderDto> findAllUserOrders(@AuthenticationPrincipal UserDetails user ){
 
-        List<Order> userAllOrders = userService.findAllUserOrders(user);
+        List<Order> userAllOrders = userService.findUserAllOrders(user);
 
         return OrderMapper.orderListToOrderDtoList(userAllOrders);
     }

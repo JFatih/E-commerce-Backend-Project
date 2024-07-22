@@ -15,8 +15,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store findById(long id) {
-        return storeRepository.findById(id).orElseThrow(()-> {
-            throw new ApiException("Store data not found", HttpStatus.INTERNAL_SERVER_ERROR);
-        });
+        return storeRepository.findById(id).orElseThrow(()-> new ApiException("Store data not found", HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

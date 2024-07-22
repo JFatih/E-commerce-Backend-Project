@@ -14,6 +14,6 @@ public interface AddressService {
 
     List<Address> findByUserId(UserDetails u);
 
-    Optional<Address> findById(Long id);
+    Address findById(Long id);
 
 }

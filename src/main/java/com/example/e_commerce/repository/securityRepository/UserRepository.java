@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
     List<CardDetails> findUserCardsDetails(String email);
 
     @Query("SELECT a.orders FROM ApplicationUser a WHERE a.email = :email")
-    List<Order> findAllUserOrders(String email);
+    List<Order> findUserAllOrders(String email);
 }

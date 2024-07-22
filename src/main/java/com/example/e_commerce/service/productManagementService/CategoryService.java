@@ -13,7 +13,7 @@ public interface CategoryService {
 
     void save(List<CategoryRequestDto> categories);
 
-    Optional<Category> findByCode(String code);
+    Category findByCode(String code);
 
-    @NotNull Category findDataById(Long id);
+    Category findById(Long id);
 }

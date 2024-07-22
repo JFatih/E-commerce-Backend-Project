@@ -6,13 +6,11 @@ import com.example.e_commerce.exceptions.ApiException;
 import com.example.e_commerce.repository.productManagementRepository.CategoryRepository;
 import com.example.e_commerce.validation.Validation;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -24,6 +22,18 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
+    }
+
+    @Override
+    public Category findByCode(String code) {
+        return categoryRepository.findByCode(code)
+                .orElseThrow(() -> new ApiException(code + " not existing", HttpStatus.BAD_REQUEST));
+    }
+
+    @Override
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Category id not found", HttpStatus.NOT_FOUND));
     }
 
     @Transactional
@@ -42,21 +52,12 @@ public class CategoryServiceImpl implements CategoryService{
             newCategory.setRating(c.getRating());
             newCategory.setGender(c.getGender());
 
-            if(findByCode(newCategory.getCode()).isPresent()){
+            if(findByCode(newCategory.getCode()) != null){
                 Validation.categoryExist(newCategory.getCode());
             }
             categoryRepository.save(newCategory);
         }
     }
 
-    @Override
-    public Optional<Category> findByCode(String code) {
-        return categoryRepository.findByCode(code);
-    }
 
-    @Override
-    public Category findDataById(Long id) {
-        return categoryRepository.findDataById(id)
-                .orElseThrow(() -> new ApiException("Category id not found", HttpStatus.NOT_FOUND));
-    }
 }

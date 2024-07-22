@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<Order> findAllUserOrders(UserDetails user) {
-        return userRepository.findAllUserOrders(user.getUsername());
+    public List<Order> findUserAllOrders(UserDetails user) {
+        return userRepository.findUserAllOrders(user.getUsername());
     }
 
 

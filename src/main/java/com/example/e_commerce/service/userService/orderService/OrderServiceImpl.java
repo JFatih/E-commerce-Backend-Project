@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService{
         Order newOrder = new Order();
         newOrder.setApplicationUser(currentlyUser);
 
-        Address foundAddress = addressService.findById(order.getAddressId()).orElseThrow(()-> Validation.isAddressExist(order.getAddressId()));
+        Address foundAddress = addressService.findById(order.getAddressId());
         newOrder.setAddress(foundAddress);
 
         newOrder.setOrderDate(order.getOrderDate());

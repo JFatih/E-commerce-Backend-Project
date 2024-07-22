@@ -3,11 +3,13 @@ package com.example.e_commerce.service.userService.adressService;
 import com.example.e_commerce.dto.UserDto.AddressRequest;
 import com.example.e_commerce.entity.user.Address;
 import com.example.e_commerce.entity.user.ApplicationUser;
+import com.example.e_commerce.exceptions.ApiException;
 import com.example.e_commerce.mapper.AddressMapper;
 import com.example.e_commerce.repository.userRepository.AddressRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,8 @@ public class AddressServiceImpl implements AddressService{
     private UserService userService;
 
     @Override
-    public Optional<Address> findById(Long id) {
-        return addressRepository.findById(id);
+    public Address findById(Long id) {
+        return addressRepository.findById(id).orElseThrow(() -> new ApiException("hata", HttpStatus.BAD_REQUEST));
     }
 
     @Override

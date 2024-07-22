@@ -56,7 +56,6 @@ public class ApplicationUser implements UserDetails {
         authorities.add(role);
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

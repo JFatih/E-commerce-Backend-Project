@@ -21,9 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -44,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Product save(ProductRequestDto p, String username) {
 
-        String productName = p.getName().replaceAll("\\s", "");
+        String productName = p.getName();
         double productPrice = p.getPrice();
 
         if(productRepository.findByProductName(productName).isPresent() &&
@@ -63,7 +60,7 @@ public class ProductServiceImpl implements ProductService{
         newProduct.setPrice(p.getPrice());
         newProduct.setStock(p.getStock());
         newProduct.setStore(user.getStore());
-        Category c = categoryService.findDataById(p.getCategory_id());
+        Category c = categoryService.findById(p.getCategory_id());
         System.out.println(c);
         newProduct.setCategory(c);
 
@@ -105,7 +102,7 @@ public class ProductServiceImpl implements ProductService{
     public ProductResponseWithCountDto findByParameter(Long id, String word, String sort, Integer limit, Integer offset){
 
         if(id != null){
-            categoryService.findDataById(id);
+            categoryService.findById(id);
         }
 
         String baseQuery = "SELECT p FROM Product p WHERE 1=1";

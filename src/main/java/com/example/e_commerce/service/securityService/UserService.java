@@ -17,6 +17,6 @@ public interface UserService {
 
     List<CardDetails> findUserCardsDetails(String email);
 
-    List<Order> findAllUserOrders(UserDetails user);
+    List<Order> findUserAllOrders(UserDetails user);
 
 }
