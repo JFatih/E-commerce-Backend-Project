@@ -30,9 +30,6 @@ class ProductRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    private Image image;
-
     @BeforeEach
     void setUp() {
 
@@ -45,7 +42,7 @@ class ProductRepositoryTest {
         Store newStore = new Store();
         newStore.setName("ali");
         newStore.setPhone("05324525252");
-        newStore.setTaxNo("T1234V123456");
+        newStore.setTaxNo("T1234V123451");
         newStore.setBankAccount("1234123412341234");
         newProduct.setStore(newStore);
 
@@ -57,15 +54,11 @@ class ProductRepositoryTest {
         newCategory.setGender("k");
         newProduct.setCategory(newCategory);
 
+        categoryRepository.save(newCategory);
+
         newProduct.setRating(3.5);
         newProduct.setSellCount(25);
 
-        List<Image> newImages = new ArrayList<>();
-        Image newImage = new Image();
-        newImage.setUrl("abc");
-        newImage.setProductId(newProduct);
-        newImages.add(newImage);
-        newProduct.setImages(newImages);
 
         Optional<Product> foundProduct = productRepository.findByProductName(newProduct.getName());
         if(foundProduct.isEmpty()){
@@ -77,7 +70,7 @@ class ProductRepositoryTest {
     void tearDown() {
         Product foundProduct = productRepository.findByProductName("xyz").get();
         productRepository.delete(foundProduct);
-        Store foundStore = storeRepository.findByTaxNo("T1234V123456").get();
+        Store foundStore = storeRepository.findByTaxNo("T1234V123451").get();
         storeRepository.delete(foundStore);
         Category foundCategory = categoryRepository.findByCode("e:parfüme").get();
         categoryRepository.delete(foundCategory);
