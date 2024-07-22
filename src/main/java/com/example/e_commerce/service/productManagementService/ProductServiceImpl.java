@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -53,7 +54,7 @@ public class ProductServiceImpl implements ProductService{
         }
 
 
-        ApplicationUser user =  userService.findByEmail(username).orElseThrow( () -> new ApiException("Currently user data not exist!", HttpStatus.INTERNAL_SERVER_ERROR));
+        ApplicationUser user =  userService.findByEmail(username);
 
         Product newProduct = new Product();
 
@@ -153,6 +154,12 @@ public class ProductServiceImpl implements ProductService{
 
 
         return ProductMapper.ProductToProductResponse(withoutLimitList,withLimitList);
+    }
+
+    @Override
+    public Product findById(Long id) {
+
+        return productRepository.findById(id).orElseThrow( () -> Validation.productIsNotExist(id));
     }
 }
 

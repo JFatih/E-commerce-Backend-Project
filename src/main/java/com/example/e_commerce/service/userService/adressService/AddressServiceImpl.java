@@ -1,4 +1,4 @@
-package com.example.e_commerce.service.userService;
+package com.example.e_commerce.service.userService.adressService;
 
 import com.example.e_commerce.dto.UserDto.AddressRequest;
 import com.example.e_commerce.entity.user.Address;
@@ -25,9 +25,14 @@ public class AddressServiceImpl implements AddressService{
     private UserService userService;
 
     @Override
+    public Optional<Address> findById(Long id) {
+        return addressRepository.findById(id);
+    }
+
+    @Override
     public List<Address> findByUserId(UserDetails u) {
 
-        Long userId = userService.findByEmail(u.getUsername()).get().getId();
+        Long userId = userService.findByEmail(u.getUsername()).getId();
 
         System.out.println(userId);
 
@@ -37,10 +42,11 @@ public class AddressServiceImpl implements AddressService{
         return res;
     }
 
+
     @Override
     public Address save(AddressRequest address, String email) {
 
-        ApplicationUser user = userService.findByEmail(email).orElseThrow( () -> Validation.userNotExist(email));
+        ApplicationUser user = userService.findByEmail(email);
 
         if(addressRepository.titleIsExist(address.getTitle()).isPresent()){
             Validation.titleIsExist(address.getTitle());

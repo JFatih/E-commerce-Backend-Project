@@ -1,5 +1,6 @@
 package com.example.e_commerce.entity.user;
 
+import com.example.e_commerce.entity.user.orders.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -44,6 +45,9 @@ public class ApplicationUser implements UserDetails {
 
     @OneToMany(mappedBy = "applicationUser")
     private List<CardDetails> cards;
+
+    @OneToMany(mappedBy = "applicationUser")
+    private List<Order> orders;
 
     public void addAuthority(Role role){
         if(authorities == null){

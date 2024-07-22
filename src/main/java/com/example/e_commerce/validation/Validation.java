@@ -58,4 +58,16 @@ public class Validation {
         }
 
     }
+
+    public static RuntimeException isAddressExist(Long addressId) {
+        throw new ApiException("Address not exist. ID: " + addressId, HttpStatus.BAD_REQUEST);
+    }
+
+    public static RuntimeException cardIsExist(String cardName) {
+        throw new ApiException("Card details not exist with name: " + cardName, HttpStatus.BAD_REQUEST);
+    }
+
+    public static RuntimeException productIsNotExist(Long id) {
+        throw new ApiException("Product not exist! ID: " + id, HttpStatus.BAD_REQUEST);
+    }
 }

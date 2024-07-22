@@ -1,6 +1,7 @@
 package com.example.e_commerce.entity.productManagementEntity;
 
 import com.example.e_commerce.entity.user.Store;
+import com.example.e_commerce.entity.user.orders.OrderProducts;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -57,4 +58,7 @@ public class Product {
     @JsonBackReference
     @OneToMany(mappedBy="productId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderProducts> orderProducts;
 }

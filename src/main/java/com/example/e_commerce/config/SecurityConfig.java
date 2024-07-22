@@ -30,6 +30,8 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.POST,"/user/address/**").hasAuthority(RoleCode.customer.name());
                     auth.requestMatchers(HttpMethod.GET,"/user/address/**").hasAuthority(RoleCode.customer.name());
                     auth.requestMatchers(HttpMethod.POST,"/user/card/**").hasAuthority(RoleCode.customer.name());
+                    auth.requestMatchers(HttpMethod.POST,"/user/order/**").hasAuthority(RoleCode.customer.name());
+                    auth.requestMatchers(HttpMethod.GET,"/user/order/**").hasAuthority(RoleCode.customer.name());
                     auth.requestMatchers(HttpMethod.GET,"/user/card/**").hasAuthority(RoleCode.customer.name());
                     auth.requestMatchers(HttpMethod.POST,"/products/adds/**").hasAuthority(RoleCode.store.name());
                     auth.requestMatchers(HttpMethod.GET,"/categories/**").permitAll();

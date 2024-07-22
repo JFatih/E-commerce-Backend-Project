@@ -4,16 +4,19 @@ import com.example.e_commerce.dto.UserDto.AddressRequest;
 import com.example.e_commerce.dto.UserDto.AddressResponse;
 import com.example.e_commerce.dto.UserDto.CardDetailsRequest;
 import com.example.e_commerce.dto.UserDto.CardDetailsResponse;
+import com.example.e_commerce.dto.UserDto.orderDto.OrderDto;
 import com.example.e_commerce.entity.user.Address;
 import com.example.e_commerce.entity.user.CardDetails;
+import com.example.e_commerce.entity.user.orders.Order;
 import com.example.e_commerce.mapper.AddressMapper;
 import com.example.e_commerce.mapper.CardDetailsMapper;
+import com.example.e_commerce.mapper.OrderMapper;
 import com.example.e_commerce.service.securityService.UserService;
-import com.example.e_commerce.service.userService.AddressService;
-import com.example.e_commerce.service.userService.CardDetailsService;
+import com.example.e_commerce.service.userService.adressService.AddressService;
+import com.example.e_commerce.service.userService.cardService.CardDetailsService;
+import com.example.e_commerce.service.userService.orderService.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,13 +30,17 @@ import java.util.List;
 public class CustomerController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private AddressService addressService;
 
     @Autowired
     private CardDetailsService cardDetailsService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
+
 
     @GetMapping
     public String welcome(){
@@ -84,6 +91,23 @@ public class CustomerController {
     public CardDetailsResponse deleteCardDetails(@PathVariable Long id){
 
         return CardDetailsMapper.cardDetailsToCardResponse(cardDetailsService.delete(id));
+
+    }
+
+    @GetMapping("/order")
+    public List<OrderDto> findAllUserOrders(@AuthenticationPrincipal UserDetails user ){
+
+        List<Order> userAllOrders = userService.findAllUserOrders(user);
+
+        return OrderMapper.orderListToOrderDtoList(userAllOrders);
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<OrderDto> saveOrder(@RequestBody OrderDto order, @AuthenticationPrincipal UserDetails user){
+
+        Order savedOrder = orderService.saveOrder(order,user);
+
+        return new ResponseEntity<>(OrderMapper.orderToOrderDto(savedOrder),HttpStatus.CREATED);
 
     }
 }

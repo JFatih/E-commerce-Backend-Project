@@ -1,4 +1,4 @@
-package com.example.e_commerce.service.userService;
+package com.example.e_commerce.service.userService.cardService;
 
 import com.example.e_commerce.dto.UserDto.CardDetailsRequest;
 import com.example.e_commerce.entity.user.ApplicationUser;
@@ -9,6 +9,7 @@ import com.example.e_commerce.repository.userRepository.CardDetailsRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,16 @@ import java.util.Optional;
 @Service
 public class CardDetailsServiceImpl implements CardDetailsService{
 
-    @Autowired
+
     private UserService userService;
 
     @Autowired
     private CardDetailsRepository cardDetailsRepository;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public List<CardDetails> findUserCardsDetails(UserDetails user){
 
@@ -33,11 +39,9 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     @Override
     public CardDetails save(CardDetailsRequest cardDetailsRequest, UserDetails user) {
 
-        Optional<ApplicationUser> currentlyUser = userService.findByEmail(user.getUsername());
+        ApplicationUser currentlyUser = userService.findByEmail(user.getUsername());
 
-        Validation.currentlyUserIsRegistered(currentlyUser);
-
-        CardDetails saveCard = CardDetailsMapper.cardRequestToCard(cardDetailsRequest,currentlyUser.get());
+        CardDetails saveCard = CardDetailsMapper.cardRequestToCard(cardDetailsRequest,currentlyUser);
 
         return cardDetailsRepository.save(saveCard);
     }
@@ -63,6 +67,12 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         cardDetailsRepository.delete(deleteCard);
 
         return deleteCard;
+    }
+
+    @Override
+    public CardDetails findByParameters(String cardNo, String cardName, Integer expireMonth, Integer expireYear) {
+
+        return cardDetailsRepository.findByParameters(cardNo,cardName,expireMonth,expireYear).orElseThrow(()-> Validation.cardIsExist(cardName));
     }
 
 }

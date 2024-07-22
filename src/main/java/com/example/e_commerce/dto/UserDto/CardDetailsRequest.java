@@ -1,6 +1,8 @@
 package com.example.e_commerce.dto.UserDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -16,16 +18,18 @@ public class CardDetailsRequest {
     private Long id;
 
     @JsonProperty("card_no")
-    @Length(min = 16,max = 16, message = "Card value have to 16 digit")
+    @Size(min = 16,max = 16, message = "Card value have to 16 digit")
     @NotEmpty
     private String cardNo;
 
     @JsonProperty("expire_month")
-    @Size(min = 1,max = 12)
+    @Min(1)
+    @Max(12)
     private Integer expireMonth;
 
     @JsonProperty("expire_year")
-    @Size(min = 2024,max = 2034)
+    @Min(2024)
+    @Max(2034)
     private Integer expireYear;
 
     @JsonProperty("name_on_card")
