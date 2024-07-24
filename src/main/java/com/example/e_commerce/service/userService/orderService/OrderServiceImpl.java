@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService{
 
             newOrderProducts.setOrder(newOrder);
             Product foundProduct = productService.findById(or.getProductId());
-            newOrderProducts.setProduct(foundProduct);
+            newOrderProducts.setProductId(foundProduct.getId());
 
             newOrderProducts.setCount(or.getCount());
             newOrderProducts.setDetail(or.getDetail());

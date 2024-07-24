@@ -25,6 +25,6 @@ public class RegisterStore{
     private String tax_no;
 
     @NotEmpty(message="Bank account number cannot empty or null")
-    @Size(min=16,max = 16, message = "Bank account number have to 16 digit.")
+    @Size(min=18,max = 18, message = "Bank account have 'TR' and 16 digit.")
     private String bank_account;
 }

@@ -39,12 +39,12 @@ public class Product {
     private int stock;
 
     @NotNull
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="store_id")
     private Store store;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id")
     private Category category;
 
@@ -56,9 +56,9 @@ public class Product {
     private int sellCount;
 
     @JsonBackReference
-    @OneToMany(mappedBy="productId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="productId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Image> images;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrderProducts> orderProducts;
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<OrderProducts> orderProducts;
 }

@@ -11,9 +11,13 @@ public interface CategoryService {
 
     List<Category> findAll();
 
-    void save(List<CategoryRequestDto> categories);
+    List<Category> saveAll(List<CategoryRequestDto> categories);
+
+    Category save(CategoryRequestDto categories);
 
     Category findByCode(String code);
 
     Category findById(Long id);
+
+
 }

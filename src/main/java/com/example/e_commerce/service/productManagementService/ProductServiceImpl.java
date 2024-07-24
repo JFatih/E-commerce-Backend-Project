@@ -25,8 +25,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     private UserService userService;
@@ -36,6 +35,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private EntityManager entityManager;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Transactional
     @Override
@@ -93,22 +96,17 @@ public class ProductServiceImpl implements ProductService{
             Product savedProduct = save(pr,username);
             savedProducts.add(savedProduct);
         }
-
-
         return savedProducts;
     }
 
     @Override
     public ProductResponseWithCountDto findByParameter(Long id, String word, String sort, Integer limit, Integer offset){
 
-        if(id != null){
-            categoryService.findById(id);
-        }
-
         String baseQuery = "SELECT p FROM Product p WHERE 1=1";
         StringBuilder mainQuery = new StringBuilder(baseQuery);
 
         if(id != null){
+            categoryService.findById(id);
             mainQuery.append(" AND p.category.id = :id");
         }
 
@@ -137,17 +135,19 @@ public class ProductServiceImpl implements ProductService{
             typedQuery.setParameter("word",word);
         }
 
-        Validation.limitValidation(limit);
-        Validation.offSetValidation(limit);
 
         List<Product> withoutLimitList = typedQuery.getResultList();
 
+
         if(limit != null && offset != null){
+            Validation.limitValidation(limit);
+            Validation.offSetValidation(offset);
             typedQuery.setFirstResult(offset);
             typedQuery.setMaxResults(limit);
         }
 
         List<Product> withLimitList = typedQuery.getResultList();
+        System.out.println(withLimitList.size());
 
 
         return ProductMapper.ProductToProductResponse(withoutLimitList,withLimitList);
@@ -157,6 +157,10 @@ public class ProductServiceImpl implements ProductService{
     public Product findById(Long id) {
 
         return productRepository.findById(id).orElseThrow( () -> Validation.productIsNotExist(id));
+    }
+
+    public ProductResponseWithCountDto findAll(){
+        return ProductMapper.ProductToProductResponse(productRepository.findAll());
     }
 }
 

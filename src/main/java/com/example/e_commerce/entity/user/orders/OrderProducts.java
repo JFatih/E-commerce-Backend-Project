@@ -21,9 +21,10 @@ public class OrderProducts {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+//    @ManyToOne
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+    private Long productId;
 
     private Integer count;
 

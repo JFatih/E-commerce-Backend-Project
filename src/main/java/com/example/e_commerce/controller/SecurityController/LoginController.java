@@ -1,6 +1,7 @@
 package com.example.e_commerce.controller.SecurityController;
 
 import com.example.e_commerce.dto.securityDto.LogInResponse;
+import com.example.e_commerce.dto.securityDto.SuccessLoginResponse;
 import com.example.e_commerce.entity.user.ApplicationUser;
 import com.example.e_commerce.service.securityService.UserService;
 import org.springframework.security.core.Authentication;
@@ -18,9 +19,12 @@ public class LoginController {
 
     private UserService userService;
 
-    @PostMapping
-    public String successLogIn(@AuthenticationPrincipal UserDetails userDetails){
-        return "Authenticated user: " + userDetails.getUsername();
+    @GetMapping
+    public SuccessLoginResponse successLogIn(@AuthenticationPrincipal UserDetails user){
+
+        SuccessLoginResponse response = new SuccessLoginResponse(user.getUsername(), user.getAuthorities().toString());
+
+        return response;
     }
 
 }

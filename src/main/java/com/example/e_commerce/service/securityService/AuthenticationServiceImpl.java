@@ -26,6 +26,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepository userRepository;
 
     @Autowired
+    private StoreService storeService;
+
+    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -67,7 +70,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             store.setName(registerUser.getStore().getName());
             store.setPhone(registerUser.getStore().getPhone());
             store.setBankAccount(registerUser.getStore().getBank_account());
+            if(storeService.findByBankAccount(registerUser.getStore().getBank_account()).isPresent()){
+                throw new ApiException("Bank Account already exist", HttpStatus.BAD_REQUEST);
+            }
             store.setTaxNo(registerUser.getStore().getTax_no());
+            if(storeService.findByTaxNo(registerUser.getStore().getTax_no()).isPresent()){
+                throw new ApiException("Tax no already exist", HttpStatus.BAD_REQUEST);
+            }
             user.setStore(store);
         }
 

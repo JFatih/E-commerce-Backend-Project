@@ -9,7 +9,6 @@ import com.example.e_commerce.repository.userRepository.CardDetailsRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,17 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     }
 
     @Override
-    public CardDetails save(CardDetailsRequest cardDetailsRequest, UserDetails user) {
+    public CardDetails save(CardDetailsRequest card, UserDetails user) {
+
+        Optional<CardDetails> existCard = cardDetailsRepository.findByCardDetails(card.getCardNo(),card.getExpireMonth(),card.getExpireYear());
+
+        if(existCard.isPresent()){
+            throw new ApiException("This card exist",HttpStatus.BAD_REQUEST);
+        }
 
         ApplicationUser currentlyUser = userService.findByEmail(user.getUsername());
 
-        CardDetails saveCard = CardDetailsMapper.cardRequestToCard(cardDetailsRequest,currentlyUser);
+        CardDetails saveCard = CardDetailsMapper.cardRequestToCard(card,currentlyUser);
 
         return cardDetailsRepository.save(saveCard);
     }

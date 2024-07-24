@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class StoreServiceImpl implements StoreService {
 
@@ -17,4 +19,16 @@ public class StoreServiceImpl implements StoreService {
     public Store findById(long id) {
         return storeRepository.findById(id).orElseThrow(()-> new ApiException("Store data not found", HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    @Override
+    public Optional<Store> findByBankAccount(String bankAccount) {
+        return storeRepository.findByBankAccount(bankAccount);
+    }
+
+    @Override
+    public Optional<Store> findByTaxNo(String taxNo) {
+        return storeRepository.findByTaxNo(taxNo);
+    }
+
+
 }

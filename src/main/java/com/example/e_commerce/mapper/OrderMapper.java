@@ -29,7 +29,7 @@ public class OrderMapper {
         for(OrderProducts or : order.getOrderProducts()){
 
             OrderProductsDto res1 = new OrderProductsDto();
-            res1.setProductId(or.getProduct().getId());
+            res1.setProductId(or.getId());
             res1.setCount(or.getCount());
             res1.setDetail(or.getDetail());
 

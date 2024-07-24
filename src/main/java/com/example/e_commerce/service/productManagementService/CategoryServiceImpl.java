@@ -10,13 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
+
 public class CategoryServiceImpl implements CategoryService{
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryServiceImpl(CategoryRepository categoryRepository){
+        this.categoryRepository = categoryRepository;
+    }
 
 
     @Override
@@ -27,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category findByCode(String code) {
         return categoryRepository.findByCode(code)
-                .orElseThrow(() -> new ApiException(code + " not existing", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ApiException("Category code: " + code + " not existing", HttpStatus.BAD_REQUEST));
     }
 
     @Override
@@ -38,13 +44,13 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Transactional
     @Override
-    public void save(List<CategoryRequestDto> categories) {
+    public List<Category> saveAll(List<CategoryRequestDto> categories) {
 
-        if(categories.isEmpty()){
-            Validation.isNotExist();
+        if( categories == null || categories.isEmpty() ){
+            throw new ApiException("Category list is empty", HttpStatus.BAD_REQUEST);
         }
 
-        for(CategoryRequestDto c : categories){
+        List<Category> newCategories = categories.stream().map(c -> {
             Category newCategory = new Category();
             newCategory.setCode(c.getCode());
             newCategory.setTitle(c.getTitle());
@@ -52,11 +58,37 @@ public class CategoryServiceImpl implements CategoryService{
             newCategory.setRating(c.getRating());
             newCategory.setGender(c.getGender());
 
-            if(findByCode(newCategory.getCode()) != null){
+            if(categoryRepository.findByCode(newCategory.getCode()).isPresent()){
                 Validation.categoryExist(newCategory.getCode());
             }
-            categoryRepository.save(newCategory);
+            return newCategory;
+        }).collect(Collectors.toList());
+
+
+
+        return categoryRepository.saveAll(newCategories);
+    }
+
+    @Transactional
+    @Override
+    public Category save(CategoryRequestDto category) {
+
+        if( category == null){
+            throw new ApiException("Category list is null", HttpStatus.BAD_REQUEST);
         }
+
+        Category newCategory = new Category();
+        newCategory.setCode(category.getCode());
+        newCategory.setTitle(category.getTitle());
+        newCategory.setImg(category.getImg());
+        newCategory.setRating(category.getRating());
+        newCategory.setGender(category.getGender());
+
+        if(categoryRepository.findByCode(newCategory.getCode()).isPresent()){
+            Validation.categoryExist(newCategory.getCode());
+        }
+        return categoryRepository.save(newCategory);
+
     }
 
 

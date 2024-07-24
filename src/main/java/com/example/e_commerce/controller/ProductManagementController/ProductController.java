@@ -35,7 +35,7 @@ public class ProductController {
 
     //Store
     @PostMapping("/add")
-    public ResponseEntity<ProductResponseDto> save(@Valid @RequestBody ProductRequestDto product, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<ProductResponseDto> saveProduct(@Valid @RequestBody ProductRequestDto product, @AuthenticationPrincipal UserDetails userDetails){
 
         String username = userDetails.getUsername();
 
@@ -46,7 +46,7 @@ public class ProductController {
 
     //store
     @PostMapping("/adds")
-    public ResponseEntity<ProductResponseWithCountDto> save(@Valid @RequestBody List<ProductRequestDto> products, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<ProductResponseWithCountDto> saveProducts(@Valid @RequestBody List<ProductRequestDto> products, @AuthenticationPrincipal UserDetails userDetails){
 
         String username = userDetails.getUsername();
 

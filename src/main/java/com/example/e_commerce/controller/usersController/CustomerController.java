@@ -1,4 +1,4 @@
-package com.example.e_commerce.controller.examples;
+package com.example.e_commerce.controller.usersController;
 
 import com.example.e_commerce.dto.UserDto.AddressRequest;
 import com.example.e_commerce.dto.UserDto.AddressResponse;
@@ -53,7 +53,7 @@ public class CustomerController {
     }
 
     @PostMapping("/address")
-    public ResponseEntity<AddressResponse> save(@Valid @RequestBody AddressRequest addressRequest, @AuthenticationPrincipal UserDetails user){
+    public ResponseEntity<AddressResponse> saveAddress(@Valid @RequestBody AddressRequest addressRequest, @AuthenticationPrincipal UserDetails user){
 
         Address address = addressService.save(addressRequest,user.getUsername());
 
@@ -71,7 +71,7 @@ public class CustomerController {
     }
 
     @PostMapping("/card")
-    public ResponseEntity<CardDetailsResponse> save(@RequestBody CardDetailsRequest cardRequest, @AuthenticationPrincipal UserDetails user){
+    public ResponseEntity<CardDetailsResponse> saveCardDetails(@RequestBody CardDetailsRequest cardRequest, @AuthenticationPrincipal UserDetails user){
 
         CardDetails savedCardDetails = cardDetailsService.save(cardRequest,user);
 

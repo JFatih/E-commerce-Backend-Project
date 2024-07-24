@@ -10,4 +10,7 @@ public interface CardDetailsRepository extends JpaRepository<CardDetails,Long> {
 
     @Query("SELECT c FROM CardDetails c WHERE c.cardNo = :cardNo AND c.nameOnCard = :cardName AND c.expireMonth = :expireMonth AND c.expireYear = :expireYear")
     Optional<CardDetails> findByParameters(String cardNo, String cardName, Integer expireMonth, Integer expireYear);
+
+    @Query("SELECT c FROM CardDetails c WHERE c.cardNo = :cardNo  AND c.expireMonth = :expireMonth AND c.expireYear = :expireYear")
+    Optional<CardDetails> findByCardDetails(String cardNo, Integer expireMonth, Integer expireYear);
 }

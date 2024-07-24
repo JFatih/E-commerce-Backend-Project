@@ -40,7 +40,6 @@ public class AddressServiceImpl implements AddressService{
 
         List<Address> res = addressRepository.findAddressByUser(userId);
 
-        System.out.println(res);
         return res;
     }
 

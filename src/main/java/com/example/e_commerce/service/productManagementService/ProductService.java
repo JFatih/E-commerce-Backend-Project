@@ -15,4 +15,6 @@ public interface ProductService {
     ProductResponseWithCountDto findByParameter(Long id, String word, String sort, Integer limit, Integer offset);
 
     Product findById(Long id);
+
+    ProductResponseWithCountDto findAll();
 }
