@@ -33,28 +33,20 @@ public class ProductController {
         return productService.findByParameter(id,word,sort,limit,offset);
     }
 
-    //Store
     @PostMapping("/add")
     public ResponseEntity<ProductResponseDto> saveProduct(@Valid @RequestBody ProductRequestDto product, @AuthenticationPrincipal UserDetails userDetails){
 
-        String username = userDetails.getUsername();
-
-        Product savedProduct = productService.save(product,username);
+        Product savedProduct = productService.save(product,userDetails.getUsername());
 
         return new ResponseEntity<>(ProductMapper.ProductToProductResponse(savedProduct), HttpStatus.CREATED);
     }
 
-    //store
     @PostMapping("/adds")
     public ResponseEntity<ProductResponseWithCountDto> saveProducts(@Valid @RequestBody List<ProductRequestDto> products, @AuthenticationPrincipal UserDetails userDetails){
 
-        String username = userDetails.getUsername();
+        List<Product> savedProducts = productService.save(products,userDetails.getUsername());
 
-        List<Product> savedProducts = productService.save(products,username);
-
-        ProductResponseWithCountDto response = ProductMapper.ProductToProductResponse(savedProducts);
-
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
+        return new ResponseEntity<>(ProductMapper.ProductToProductResponse(savedProducts),HttpStatus.CREATED);
     }
 
 }

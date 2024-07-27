@@ -21,10 +21,7 @@ public class LoginController {
 
     @GetMapping
     public SuccessLoginResponse successLogIn(@AuthenticationPrincipal UserDetails user){
-
-        SuccessLoginResponse response = new SuccessLoginResponse(user.getUsername(), user.getAuthorities().toString());
-
-        return response;
+        return new SuccessLoginResponse(user.getUsername(), user.getAuthorities().toString());
     }
 
 }

@@ -1,5 +1,4 @@
 package com.example.e_commerce.service.productManagementService;
-
 import com.example.e_commerce.dto.ProductManagementDto.ImageRequestDto;
 import com.example.e_commerce.dto.ProductManagementDto.ProductRequestDto;
 import com.example.e_commerce.dto.ProductManagementDto.ProductResponseWithCountDto;
@@ -47,41 +46,13 @@ public class ProductServiceImpl implements ProductService{
         String productName = p.getName();
         double productPrice = p.getPrice();
 
-        if(productRepository.findByProductName(productName).isPresent() &&
-                productRepository.findByProductPrice(productPrice).isPresent() ){
-
+        if(productRepository.findByProductName(productName).isPresent()){
             throw new ApiException("Product name: " + productName + " exist So cant added.", HttpStatus.BAD_REQUEST);
         }
 
-
         ApplicationUser user =  userService.findByEmail(username);
 
-        Product newProduct = new Product();
-
-        newProduct.setName(p.getName());
-        newProduct.setDescription(p.getDescription());
-        newProduct.setPrice(p.getPrice());
-        newProduct.setStock(p.getStock());
-        newProduct.setStore(user.getStore());
-        Category c = categoryService.findById(p.getCategory_id());
-        System.out.println(c);
-        newProduct.setCategory(c);
-
-        newProduct.setRating(p.getRating());
-        newProduct.setSellCount(p.getSell_count());
-
-        List<Image> images = new ArrayList<>();
-        long index = 0L;
-        for(ImageRequestDto img : p.getImages()){
-
-            Image newImg = new Image();
-            newImg.setUrl(img.getUrl());
-            newImg.setIndex(index++);
-            newImg.setProductId(newProduct);
-            images.add(newImg);
-        }
-        newProduct.setImages(images);
-
+        Product newProduct = requestDtoToProduct(p,user);
 
         return productRepository.save(newProduct);
     }
@@ -115,15 +86,11 @@ public class ProductServiceImpl implements ProductService{
         }
 
         if(sort != null){
-
             String[] sortData = sort.split(":");
             mainQuery.append(" ORDER BY p.").append(sortData[0]).append(" ").append(sortData[1]);
-
         }
 
         String finalQuery = mainQuery.toString();
-
-        System.out.println(finalQuery);
 
         TypedQuery<Product> typedQuery = entityManager.createQuery(finalQuery,Product.class);
 
@@ -149,18 +116,46 @@ public class ProductServiceImpl implements ProductService{
         List<Product> withLimitList = typedQuery.getResultList();
         System.out.println(withLimitList.size());
 
-
         return ProductMapper.ProductToProductResponse(withoutLimitList,withLimitList);
     }
 
     @Override
     public Product findById(Long id) {
-
         return productRepository.findById(id).orElseThrow( () -> Validation.productIsNotExist(id));
     }
 
+    @Override
     public ProductResponseWithCountDto findAll(){
         return ProductMapper.ProductToProductResponse(productRepository.findAll());
+    }
+
+    public Product requestDtoToProduct(ProductRequestDto p, ApplicationUser user){
+
+        Product newProduct = new Product();
+
+        newProduct.setName(p.getName());
+        newProduct.setDescription(p.getDescription());
+        newProduct.setPrice(p.getPrice());
+        newProduct.setStock(p.getStock());
+        newProduct.setStore(user.getStore());
+        Category c = categoryService.findById(p.getCategory_id());
+        newProduct.setCategory(c);
+        newProduct.setRating(p.getRating());
+        newProduct.setSellCount(p.getSell_count());
+
+        List<Image> images = new ArrayList<>();
+        long index = 0L;
+        for(ImageRequestDto img : p.getImages()){
+
+            Image newImg = new Image();
+            newImg.setUrl(img.getUrl());
+            newImg.setIndex(index++);
+            newImg.setProductId(newProduct);
+            images.add(newImg);
+        }
+        newProduct.setImages(images);
+
+        return newProduct;
     }
 }
 

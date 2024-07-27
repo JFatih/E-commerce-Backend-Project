@@ -8,6 +8,11 @@ import java.util.Optional;
 
 public class Validation {
 
+    public static void isNull(Object data, String name){
+        if(data == null){
+            throw new ApiException(name + "is null.", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     public static void emailAlreadyExist(String email) {
 

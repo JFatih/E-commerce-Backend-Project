@@ -1,5 +1,4 @@
 package com.example.e_commerce.service.productManagementService;
-
 import com.example.e_commerce.dto.ProductManagementDto.CategoryRequestDto;
 import com.example.e_commerce.entity.productManagementEntity.Category;
 import com.example.e_commerce.exceptions.ApiException;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-
 public class CategoryServiceImpl implements CategoryService{
 
     private final CategoryRepository categoryRepository;
@@ -23,7 +21,6 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryServiceImpl(CategoryRepository categoryRepository){
         this.categoryRepository = categoryRepository;
     }
-
 
     @Override
     public List<Category> findAll() {
@@ -51,12 +48,8 @@ public class CategoryServiceImpl implements CategoryService{
         }
 
         List<Category> newCategories = categories.stream().map(c -> {
-            Category newCategory = new Category();
-            newCategory.setCode(c.getCode());
-            newCategory.setTitle(c.getTitle());
-            newCategory.setImg(c.getImg());
-            newCategory.setRating(c.getRating());
-            newCategory.setGender(c.getGender());
+
+            Category newCategory = dtoToCategory(c);
 
             if(categoryRepository.findByCode(newCategory.getCode()).isPresent()){
                 Validation.categoryExist(newCategory.getCode());
@@ -64,31 +57,30 @@ public class CategoryServiceImpl implements CategoryService{
             return newCategory;
         }).collect(Collectors.toList());
 
-
-
         return categoryRepository.saveAll(newCategories);
     }
 
     @Transactional
     @Override
-    public Category save(CategoryRequestDto category) {
+    public Category save(CategoryRequestDto requestCategory) {
 
-        if( category == null){
-            throw new ApiException("Category list is null", HttpStatus.BAD_REQUEST);
+        if(categoryRepository.findByCode(requestCategory.getCode()).isPresent()){
+            Validation.categoryExist(requestCategory.getCode());
         }
 
+        Category newCategory = dtoToCategory(requestCategory);
+
+        return categoryRepository.save(newCategory);
+    }
+
+    public static Category dtoToCategory(CategoryRequestDto category){
         Category newCategory = new Category();
         newCategory.setCode(category.getCode());
         newCategory.setTitle(category.getTitle());
         newCategory.setImg(category.getImg());
         newCategory.setRating(category.getRating());
         newCategory.setGender(category.getGender());
-
-        if(categoryRepository.findByCode(newCategory.getCode()).isPresent()){
-            Validation.categoryExist(newCategory.getCode());
-        }
-        return categoryRepository.save(newCategory);
-
+        return newCategory;
     }
 
 
