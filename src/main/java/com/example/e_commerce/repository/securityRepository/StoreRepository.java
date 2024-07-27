@@ -14,4 +14,10 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT s FROM Store s WHERE s.bankAccount = :bankAccount")
     Optional<Store> findByBankAccount(String bankAccount);
 
+    @Query("SELECT s FROM Store s WHERE s.name = :storeName")
+    Optional<Store> findByStoreName(String storeName);
+
+    @Query("SELECT s FROM Store s WHERE s.phone = :phone")
+    Optional<Store> findByPhone(String phone);
+
 }

@@ -11,4 +11,8 @@ public interface StoreService {
     Optional<Store> findByBankAccount(String bankAccount);
 
     Optional<Store> findByTaxNo(String taxNo);
+
+    Optional<Store> findByStoreName(String storeName);
+
+    Optional<Store> findByPhone(String phone);
 }

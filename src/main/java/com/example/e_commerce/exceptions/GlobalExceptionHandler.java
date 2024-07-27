@@ -52,4 +52,10 @@ public class GlobalExceptionHandler {
         ApiExceptionResponse error = new ApiExceptionResponse(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(),LocalDateTime.now());
         return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(StoreDataExistValidationException.class)
+    public ResponseEntity<ApiExceptionResponse> exceptionHandler(StoreDataExistValidationException e){
+        ApiExceptionResponse error = new ApiExceptionResponse(e.getErrors().toString(),e.getStatus().value(),LocalDateTime.now());
+        return new ResponseEntity<>(error,e.getStatus());
+    }
 }

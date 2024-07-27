@@ -6,11 +6,12 @@ import com.example.e_commerce.entity.user.Role;
 import com.example.e_commerce.repository.securityRepository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthenticationService {
 
     ApplicationUser register(RegisterUser registerUser);
 
-    ApplicationUser findUserByEmail(String email);
+    Optional<ApplicationUser> findUserByEmail(String email);
 
 }

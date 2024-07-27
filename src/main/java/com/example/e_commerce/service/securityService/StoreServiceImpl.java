@@ -30,5 +30,15 @@ public class StoreServiceImpl implements StoreService {
         return storeRepository.findByTaxNo(taxNo);
     }
 
+    @Override
+    public Optional<Store> findByStoreName(String storeName) {
+        return storeRepository.findByStoreName(storeName);
+    }
+
+    @Override
+    public Optional<Store> findByPhone(String phone) {
+        return storeRepository.findByPhone(phone);
+    }
+
 
 }

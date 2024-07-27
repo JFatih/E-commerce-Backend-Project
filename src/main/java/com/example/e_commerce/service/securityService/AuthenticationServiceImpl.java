@@ -6,7 +6,7 @@ import com.example.e_commerce.entity.user.Role;
 import com.example.e_commerce.entity.user.RoleCode;
 import com.example.e_commerce.entity.user.Store;
 import com.example.e_commerce.exceptions.ApiException;
-import com.example.e_commerce.repository.securityRepository.RoleRepository;
+import com.example.e_commerce.exceptions.StoreDataExistValidationException;
 import com.example.e_commerce.repository.securityRepository.UserRepository;
 import com.example.e_commerce.validation.Validation;
 import jakarta.transaction.Transactional;
@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private StoreService storeService;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,69 +38,108 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ApplicationUser register(RegisterUser registerUser){
 
-        if(userRepository.findUserByEmail(registerUser.getEmail()).isPresent()){
-            Validation.emailAlreadyExist(registerUser.getEmail());
+        Optional<ApplicationUser> isExistUser = userRepository.findUserByEmail(registerUser.getEmail());
+        ApplicationUser currentlyUser = null;
+        boolean isAddRole = false;
+
+        //user exist and exist user has request role && exist user haven't role but password is correct
+        if(isExistUser.isPresent() ){
+            currentlyUser = isExistUser.get();
+            if(currentlyUser.getAuthorities().contains(roleService.findById(Long.valueOf(registerUser.getRole_id())))){
+                throw new ApiException("Username: " + registerUser.getEmail() + ". Roles: " + roleService.findById(Long.valueOf(registerUser.getRole_id())).getName() + " are exist." , HttpStatus.BAD_REQUEST);
+            }else{
+                if(!passwordEncoder.matches(registerUser.getPassword(), currentlyUser.getPassword())){
+                    throw new ApiException("Exist user password wrong. Please use the existing password", HttpStatus.BAD_REQUEST);
+                }else{
+                    isAddRole = true;
+                }
+            }
         }
 
-        if(registerUser.getRole_id().contains(2L) && registerUser.getStore() == null){
+        // user not exist && user request has store role && is Store data not null
+        if(registerUser.getRole_id().equals("2") && registerUser.getStore() == null){
             Validation.storeRegisterNullStoreData();
         }
 
-        if(roleRepository.findAll().isEmpty()){
+        //role entity is empty add roles data
+        if(roleService.findAll().isEmpty()){
             addRole();
         }
 
-        Set<Role> roles = new HashSet<>();
-        
-        for(Long roleId : registerUser.getRole_id()){
-            Role role = roleRepository.findById(roleId).orElseThrow( () -> new ApiException("Invalid role Id:" + roleId, HttpStatus.BAD_REQUEST));
-            roles.add(role);
+        //Add role
+        Role newRole = roleService.findById(Long.valueOf(registerUser.getRole_id()));
+
+        //Exist user add role Or Register new user
+        if(isAddRole){
+            currentlyUser.addAuthority(newRole);
+            return currentlyUser;
+        }else{
+            String encodePassword = passwordEncoder.encode(registerUser.getPassword());
+
+            ApplicationUser user = new ApplicationUser();
+            user.setName(registerUser.getName());
+            user.setEmail(registerUser.getEmail());
+            user.setPassword(encodePassword);
+            user.addAuthority(newRole);
+
+            if( registerUser.getRole_id().contains("2") ){
+                if( registerUser.getStore() != null){
+
+                    List<String> errors = new ArrayList<>();
+
+                    Store store = new Store();
+                    if(storeService.findByStoreName(registerUser.getStore().getName()).isPresent()){
+                        errors.add("Store name already exist");
+                    }
+                    store.setName(registerUser.getStore().getName());
+                    if(storeService.findByPhone(registerUser.getStore().getPhone()).isPresent()){
+                        errors.add("Store phone number already exist");
+                    }
+                    store.setPhone(registerUser.getStore().getPhone());
+                    if(storeService.findByBankAccount(registerUser.getStore().getBank_account()).isPresent()){
+                        errors.add("Store bank Account already exist");
+                    }
+                    store.setBankAccount(registerUser.getStore().getBank_account());
+
+                    if(storeService.findByTaxNo(registerUser.getStore().getTax_no()).isPresent()){
+                        errors.add("Store tax no already exist");
+                    }
+                    store.setTaxNo(registerUser.getStore().getTax_no());
+
+                    if(!errors.isEmpty()){
+                        throw new StoreDataExistValidationException(errors,HttpStatus.BAD_REQUEST);
+                    }
+
+                    user.setStore(store);
+                }else{
+                    throw new ApiException("Store register must have Store data", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+            return userRepository.save(user);
         }
 
-        String encodePassword = passwordEncoder.encode(registerUser.getPassword());
 
-        ApplicationUser user = new ApplicationUser();
-        user.setName(registerUser.getName());
-        user.setEmail(registerUser.getEmail());
-        user.setPassword(encodePassword);
-        user.setAuthorities(roles);
-
-        if( registerUser.getRole_id().contains(2L) && registerUser.getStore() != null ){
-            Store store = new Store();
-            store.setName(registerUser.getStore().getName());
-            store.setPhone(registerUser.getStore().getPhone());
-            store.setBankAccount(registerUser.getStore().getBank_account());
-            if(storeService.findByBankAccount(registerUser.getStore().getBank_account()).isPresent()){
-                throw new ApiException("Bank Account already exist", HttpStatus.BAD_REQUEST);
-            }
-            store.setTaxNo(registerUser.getStore().getTax_no());
-            if(storeService.findByTaxNo(registerUser.getStore().getTax_no()).isPresent()){
-                throw new ApiException("Tax no already exist", HttpStatus.BAD_REQUEST);
-            }
-            user.setStore(store);
-        }
-
-        return userRepository.save(user);
     }
 
     private void addRole(){
             Role role1 = new Role();
             role1.setName("Yönetici");
             role1.setCode(RoleCode.admin);
-            roleRepository.save(role1);
+            roleService.save(role1);
             Role role2 = new Role();
             role2.setName("Mağaza");
             role2.setCode(RoleCode.store);
-            roleRepository.save(role2);
+            roleService.save(role2);
             Role role3 = new Role();
             role3.setName("Müşteri");
             role3.setCode(RoleCode.customer);
-            roleRepository.save(role3);
+            roleService.save(role3);
     }
 
     @Override
-    public ApplicationUser findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElseThrow( () -> Validation.userNotExist(email));
+    public Optional<ApplicationUser> findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
 }

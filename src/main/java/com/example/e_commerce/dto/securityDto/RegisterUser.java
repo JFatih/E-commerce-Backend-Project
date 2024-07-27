@@ -32,13 +32,13 @@ public class RegisterUser{
     private String password;
 
     @NotEmpty(message="role_id cannot empty or null")
-    private Set<Long> role_id;
+    private String role_id;
 
     @Valid
     private RegisterStore store;
 
 
-    public RegisterUser(String name, String email, String password, Set<Long> role_id) {
+    public RegisterUser(String name, String email, String password, String role_id) {
         this.name = name;
         this.email = email;
         this.password = password;
