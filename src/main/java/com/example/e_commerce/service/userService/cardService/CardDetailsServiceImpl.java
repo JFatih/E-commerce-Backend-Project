@@ -8,6 +8,7 @@ import com.example.e_commerce.mapper.CardDetailsMapper;
 import com.example.e_commerce.repository.userRepository.CardDetailsRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +37,7 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     }
 
     @Override
+    @Transactional
     public CardDetails save(CardDetailsRequest card, UserDetails user) {
 
         Optional<CardDetails> existCard = cardDetailsRepository.findByCardDetails(card.getCardNo(),card.getExpireMonth(),card.getExpireYear());

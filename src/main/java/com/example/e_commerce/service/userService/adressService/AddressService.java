@@ -12,7 +12,7 @@ public interface AddressService {
 
     Address save(AddressRequest address, String username);
 
-    List<Address> findByUserId(UserDetails u);
+    List<Address> findAddressByUser(UserDetails u);
 
     Address findById(Long id);
 

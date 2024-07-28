@@ -48,8 +48,8 @@ public class CustomerController {
     }
 
     @GetMapping("/address")
-    public List<AddressResponse> findAll(@AuthenticationPrincipal UserDetails u){
-        return AddressMapper.addressListToAddressResponseList(addressService.findByUserId(u));
+    public List<AddressResponse> findAddressByUser(@AuthenticationPrincipal UserDetails u){
+        return AddressMapper.addressListToAddressResponseList(addressService.findAddressByUser(u));
     }
 
     @PostMapping("/address")

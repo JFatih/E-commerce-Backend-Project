@@ -8,6 +8,7 @@ import com.example.e_commerce.mapper.AddressMapper;
 import com.example.e_commerce.repository.userRepository.AddressRepository;
 import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.validation.Validation;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,23 +29,20 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public Address findById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new ApiException("hata", HttpStatus.BAD_REQUEST));
+        return addressRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Address> findByUserId(UserDetails u) {
+    public List<Address> findAddressByUser(UserDetails u) {
 
         Long userId = userService.findByEmail(u.getUsername()).getId();
 
-        System.out.println(userId);
-
-        List<Address> res = addressRepository.findAddressByUser(userId);
-
-        return res;
+        return addressRepository.findAddressByUser(userId);
     }
 
 
     @Override
+    @Transactional
     public Address save(AddressRequest address, String email) {
 
         ApplicationUser user = userService.findByEmail(email);

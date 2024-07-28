@@ -15,6 +15,7 @@ import com.example.e_commerce.service.securityService.UserService;
 import com.example.e_commerce.service.userService.adressService.AddressService;
 import com.example.e_commerce.service.userService.cardService.CardDetailsService;
 import com.example.e_commerce.validation.Validation;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements OrderService{
     private ProductService productService;
 
     @Override
+    @Transactional
     public Order saveOrder(OrderDto order, UserDetails user) {
 
         ApplicationUser currentlyUser = userService.findByEmail(user.getUsername());
