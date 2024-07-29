@@ -43,6 +43,7 @@ class CategoryControllerTest {
     @MockBean
     private CategoryService categoryService;
 
+    //Controller test hatası burada//
     @Test
     void findAll() throws Exception {
         Category category1 = new Category();
@@ -63,7 +64,6 @@ class CategoryControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/categories")
-                        .with(user("test@gmail.com").password("Test@123").roles("admin","store","customer"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].code").value("e:parfüme"))

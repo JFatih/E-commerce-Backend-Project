@@ -4,6 +4,8 @@ import com.example.e_commerce.entity.user.Address;
 import com.example.e_commerce.entity.user.ApplicationUser;
 import com.example.e_commerce.entity.user.CardDetails;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

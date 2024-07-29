@@ -3,6 +3,7 @@ package com.example.e_commerce.entity.user;
 import com.example.e_commerce.entity.user.orders.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class ApplicationUser implements UserDetails {
     @NotNull
     private String password;
 
+    @NotEmpty
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="app_user_role",schema="ecommerce",
                 joinColumns = @JoinColumn(name="app_user_id"),
@@ -43,10 +45,10 @@ public class ApplicationUser implements UserDetails {
     @JoinColumn(name="store_id")
     private Store store;
 
-    @OneToMany(mappedBy = "applicationUser")
+    @OneToMany(mappedBy = "applicationUser", cascade = CascadeType.ALL)
     private List<CardDetails> cards;
 
-    @OneToMany(mappedBy = "applicationUser")
+    @OneToMany(mappedBy = "applicationUser", cascade = CascadeType.ALL)
     private List<Order> orders;
 
     public void addAuthority(Role role){
@@ -54,6 +56,20 @@ public class ApplicationUser implements UserDetails {
             authorities = new HashSet<>();
         }
         authorities.add(role);
+    }
+
+    public void addCard(CardDetails card){
+        if(cards == null){
+            cards = new ArrayList<>();
+        }
+        cards.add(card);
+    }
+
+    public void addOrder(Order order){
+        if(orders == null){
+            orders = new ArrayList<>();
+        }
+        orders.add(order);
     }
 
     @Override

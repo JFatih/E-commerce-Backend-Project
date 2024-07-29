@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public ApplicationUser findByEmail(String email) {
 
-        return userRepository.findByEmail(email).orElseThrow( () -> new ApiException("User not exist. Email: " + email, HttpStatus.BAD_REQUEST ));
+        return userRepository.findUserByEmail(email).orElseThrow( () -> new ApiException("User not exist. Email: " + email, HttpStatus.BAD_REQUEST ));
     }
 
     @Override
