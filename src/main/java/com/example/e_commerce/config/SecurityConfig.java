@@ -45,10 +45,10 @@ public class SecurityConfig {
         httpSecurity.cors().configurationSource(corsConfigurationSource());
         return httpSecurity.csrf( csrf -> csrf.disable())
                 .authorizeHttpRequests( auth -> {
+                    auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll();
                     auth.requestMatchers("/auth/**").permitAll();
                     auth.requestMatchers("/roles/**").permitAll();
                     auth.requestMatchers("/login/**").permitAll();
-                    auth.requestMatchers(AUTH_WHITELIST).permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/categories/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/products/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/categories/**").hasAuthority(RoleCode.admin.name());
@@ -84,13 +84,5 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }
-
-    private static final String[] AUTH_WHITELIST = {
-            "/ecommerce/api/v1/auth/**",
-            "/ecommerce/v3/apis-docs/**",
-            "/ecommerce/v3/api-docs.yaml",
-            "/ecommerce/swagger-ui/**",
-            "/ecommerce/swagger-ui.html"
-    };
 
 }
