@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/test/java/com/example/e_commerce/controller/ProductManagementController/
+/src/test/java/com/example/e_commerce/repository/
+/src/test/java/com/example/e_commerce/service/productManagementService/
