@@ -31,11 +31,11 @@ jobs:
 
       - name: Build and push to Heroku
         run: |
-          docker build -t registry.heroku.com/<app-name>/web .
-          docker push registry.heroku.com/<app-name>/web
+          docker build -t registry.heroku.com/ecommerce-boutique-demo/web .
+          docker push registry.heroku.com/ecommerce-boutique-demo/web
 
       - name: Release to Heroku
         run: |
-          heroku container:release web --app <app-name>
+          heroku container:release web --app ecommerce-boutique-demo
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
