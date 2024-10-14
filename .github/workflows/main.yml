@@ -23,3 +23,19 @@ jobs:
         run: |
           mvn -B package --file pom.xml
           
+      - name: Login to Heroku
+        run: echo "$HEROKU_API_KEY" | docker login --username="$HEROKU_EMAIL" --password-stdin registry.heroku.com
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+
+      - name: Build and push to Heroku
+        run: |
+          docker build -t registry.heroku.com/<app-name>/web .
+          docker push registry.heroku.com/<app-name>/web
+
+      - name: Release to Heroku
+        run: |
+          heroku container:release web --app <app-name>
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
