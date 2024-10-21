@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name="product",schema="ecommerce")
+@Table(name="product",schema="public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="image",schema="ecommerce")
+@Table(name="image",schema="public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

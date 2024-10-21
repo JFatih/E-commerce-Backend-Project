@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "order",schema = "ecommerce")
+@Table(name = "order",schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

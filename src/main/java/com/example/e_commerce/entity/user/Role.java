@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="role",schema="ecommerce")
+@Table(name="role",schema="public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

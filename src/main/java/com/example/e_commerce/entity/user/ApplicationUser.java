@@ -17,7 +17,7 @@ import java.util.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="app_user",schema="ecommerce")
+@Table(name="app_user",schema="public")
 public class ApplicationUser implements UserDetails {
 
     @Id
